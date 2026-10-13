@@ -6,17 +6,28 @@ PLOT_WIDTH <- 12
 PLOT_HEIGHT <- 7.2
 PNG_DPI <- 150
 MAX_PLOT_POINTS <- 2400L
-TOTAL_MEMORY_COLOR <- "#8f8f8f"
-BOUNDARY_COLOR <- "#bdbdbd"
-LIMIT_COLOR <- "#b2182b"
+TOTAL_MEMORY_COLOR   <- "#8f8f8f"
+BOUNDARY_COLOR       <- "#bdbdbd"
+LIMIT_COLOR          <- "#b2182b"
 
 MODULE_COLORS <- c(
-  demultiplex = "#1b9e77", prepReads = "#d95f02", alignReads = "#7570b3",
-  buildFragments = "#e7298a", buildStdFragments = "#66a61e",
-  buildSites = "#e6ab02", nearestGenes = "#a6761d",
-  annotateRepeats = "#1f78b4", testHMMs = "#6a3d9a",
-  buildSeqDataMap = "#b15928", validateSampleData = "#666666"
+  showResources       = "#000000",
+  testDBconn          = "#737373",
+  buildSeqDataMap     = "#252525",
+  validateSampleData  = "#CAB2D6",
+  demultiplex         = "#A6CEE3", 
+  testHMMs            = "#6A3D9A",
+  prepReads           = "#1F78B4", 
+  alignReads          = "#B2DF8A",
+  buildFragments      = "#33A02C", 
+  pullDBrecords       = "#FFFF99",
+  buildStdFragments   = "#FB9A99",
+  buildSites          = "#E31A1C", 
+  nearestGenes        = "#FDBF6F",
+  annotateRepeats     = "#FF7F00", 
+  buildAnalysisReport = "#B15928"
 )
+
 FALLBACK_COLORS <- c("#17becf", "#e41a1c", "#377eb8", "#4daf4a",
                      "#984ea3", "#ff7f00", "#a65628", "#f781bf")
 
@@ -126,19 +137,25 @@ draw_summary_pages <- function(d, summary_data, run_id, status, limit_gib){
   duration <- max(d$epoch_seconds) - min(d$epoch_seconds)
   limit_text <- if(is.finite(limit_gib)) sprintf("%.2f GiB", limit_gib) else "not set"
   peak_percent <- if(is.finite(limit_gib)) sprintf("%.2f%%", 100 * max(d$total_gib) / limit_gib) else "not available"
+  
   overview <- c(
-    paste0("Run: ", run_id), paste0("Status: ", status),
-    paste0("Start: ", d$timestamp_utc[1L],
-           "    Last measurement: ", d$timestamp_utc[nrow(d)]),
-    paste0("Elapsed: ", format_duration(duration), "    Measurements: ", nrow(d)),
-    paste0("Peak working set: ", format_gib(max(d$working_set_bytes)),
-           "    Peak total memory: ", format_gib(max(d$memory_bytes))),
-    paste0("Peak anonymous memory: ", format_gib(max(d$anon_bytes)),
-           "    Peak shared memory: ", format_gib(max(d$shmem_bytes))),
-    paste0("Docker memory limit: ", limit_text, "    Peak percent of limit: ", peak_percent),
-    paste0("OOM events: ", max(d$oom_events), "    OOM-kill events: ", max(d$oom_kill_events)),
+    paste0("Run: ", run_id), 
+    paste0("Status: ", status),
+    paste0("Start: ", d$timestamp_utc[1L]),
+    paste0("Last measurement: ", d$timestamp_utc[nrow(d)]),
+    paste0("Elapsed: ", format_duration(duration)), 
+    paste0("Measurements: ", nrow(d)),
+    paste0("Peak working set: ", format_gib(max(d$working_set_bytes))),
+    paste0("Peak total memory: ", format_gib(max(d$memory_bytes))),
+    paste0("Peak anonymous memory: ", format_gib(max(d$anon_bytes))),
+    paste0("Peak shared memory: ", format_gib(max(d$shmem_bytes))),
+    paste0("Docker memory limit: ", limit_text),
+    paste0("Peak percent of limit: ", peak_percent),
+    paste0("OOM events: ", max(d$oom_events)),
+    paste0("OOM-kill events: ", max(d$oom_kill_events)),
     paste0("Report updated: ", format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"))
   )
+  
   grid::grid.text(paste(overview, collapse = "\n"),
                   x = grid::unit(0.05, "npc"), y = grid::unit(0.87, "npc"),
                   just = c("left", "top"),
@@ -168,7 +185,10 @@ draw_summary_pages <- function(d, summary_data, run_id, status, limit_gib){
                       just = c("left", "top"),
                       gp = grid::gpar(fontfamily = "sans", fontsize = 16, fontface = "bold"))
     }
-    top <- if(page == 1L) 0.54 else 0.86
+    
+    ### top <- if(page == 1L) 0.54 else 0.86
+    top <- if(page == 1L) 0.30 else 0.86
+    
     grid::grid.text(paste(c(header, rows[groups[[page]]]), collapse = "\n"),
                     x = grid::unit(0.05, "npc"), y = grid::unit(top, "npc"),
                     just = c("left", "top"),

@@ -17,7 +17,7 @@ parser$add_argument("--blatMaxtNumInsert",       type = "integer",       default
 parser$add_argument("--blatMaxqNumInsert",       type = "integer",       default = 1,              help = "BLAT max number of query inserts.")
 parser$add_argument("--blatMaxtBaseInsert",      type = "integer",       default = 1,              help = "BLAT max number of target insert NTs.")
 parser$add_argument("--blatMaxqBaseInsert",      type = "integer",       default = 1,              help = "BLAT max number of query insert NTs.")
-parser$add_argument("--dataRowChunkSize",        type = "integer",       default = 2500,           help = "Numbers of data rows to process per alignment worker.")
+parser$add_argument("--dataRowChunkSize",        type = "integer",       default = 5000,           help = "Numbers of data rows to process per alignment worker.")
 
 runModule <- function(){
   doneFile <- file.path(args$outputDir, paste0(args$fileTag, '.done'))
